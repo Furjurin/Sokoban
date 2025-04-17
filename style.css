@@ -10,30 +10,58 @@
 }
 
 .emptiness {
-  background-color: rgb(0, 0, 0);
+  background-image: url("back.png");
+  background-size: cover;
+}
+
+.emptiness2 {
+  background-image: url("back2.png");
+  background-size: cover;
 }
 
 .wall {
-  background-color: gray;
+  background-image: url("stena.png");
+  background-size: cover;
 }
 
 .floor {
-  background-color: white;
+  background-size: cover;
+  background-image: url("floor.png");
+}
+
+.door {
+  background-image: url("door.png");
+  background-size: cover;
+}
+
+.door2 {
+  background-image: url("door2.png");
+  background-size: cover;
 }
 
 .box {
-  background-color: brown;
+  background-image: url("box.png");
+  background-size: cover;
 }
 
 .checkPoint {
-  background-color: gold;
+  background-image: url("chek.png");
+  background-size: cover;
 }
 
 .man {
-  background-color: royalblue;
+  background-image: url("mna.png");
+  background-size: cover;
 }
+
 .boxAtCheckpoint {
-  background-color: rgb(253, 7, 134);
+  background-image: url("boxC.png");
+  background-size: cover;
+}
+
+.closeDoor {
+  background-image: url("closeDoor.png");
+  background-size: cover;
 }
 
 body {
@@ -42,7 +70,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: sans-serif;
+  background-image: url("podzemele.webp");
 }
 
 #hud {
@@ -61,6 +92,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 40px 20px rgba(65, 53, 75, 0.781);
+  padding: 0px;
 }
 
 .modal {
@@ -77,14 +110,51 @@ body {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgba(52, 47, 61, 0.894);
   padding: 30px 50px;
   border-radius: 20px;
   font-size: 24px;
   font-weight: bold;
+  text-align: center;
+  color: rgb(255, 255, 255);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .hidden {
   display: none;
+}
+
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(5, 5, 5, 0.95);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+#start-button.btn:hover {
+  background-color: rgba(255, 255, 255, 0.853);
+}
+
+.btn {
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #22222200;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: rgba(188, 215, 209, 0.853);
+  color: #1e1028;
 }

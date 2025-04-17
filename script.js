@@ -1,41 +1,83 @@
+// const map = [
+//   [0, 0, 0, 1, 1, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 7],
+//   [0, 0, 0, 1, 5, 5, 5, 1, 7, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 7, 0, 1, 5, 2, 2, 1, 1, 1, 1, 0, 7, 0, 0, 0],
+//   [0, 0, 0, 1, 5, 5, 2, 5, 2, 5, 1, 0, 0, 7, 0, 0],
+//   [7, 0, 0, 1, 5, 5, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0],
+//   [1, 1, 9, 1, 5, 5, 1, 8, 2, 5, 1, 1, 1, 1, 1, 1],
+//   [1, 5, 5, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 3, 3, 1],
+//   [1, 1, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 3, 3, 1],
+//   [7, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 3, 3, 1],
+//   [0, 7, 0, 0, 0, 0, 0, 0, 7, 0, 1, 1, 8, 1, 1, 1],
+// ];
+
 const map = [
-  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 5, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 5, 5, 2, 5, 2, 5, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 5, 5, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 5, 5, 1, 1, 2, 5, 1, 1, 1, 1, 1, 1],
+  [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 1, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 7],
+  [0, 0, 0, 1, 5, 5, 5, 1, 7, 0, 0, 0, 0, 0, 0, 0],
+  [0, 7, 0, 1, 5, 5, 5, 1, 1, 1, 1, 0, 7, 0, 0, 0],
+  [0, 0, 0, 1, 5, 5, 5, 5, 5, 5, 1, 0, 0, 7, 0, 0],
+  [7, 0, 0, 1, 5, 5, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0],
+  [1, 1, 9, 1, 5, 5, 1, 8, 5, 5, 1, 1, 1, 1, 1, 1],
   [1, 5, 5, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 3, 3, 1],
   [1, 1, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 3, 3, 1],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 3, 3, 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+  [7, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 3, 3, 1],
+  [0, 7, 0, 0, 0, 0, 0, 0, 7, 0, 1, 1, 8, 1, 1, 1],
 ];
+
+const level2 = [
+  [0, 1, 1, 1, 0, 0, 0, 0],
+  [0, 1, 11, 1, 1, 1, 1, 1],
+  [0, 1, 5, 5, 3, 3, 3, 1],
+  [0, 1, 1, 5, 5, 5, 5, 1],
+  [0, 0, 1, 1, 5, 1, 1, 1],
+  [0, 0, 0, 1, 2, 1, 0, 0],
+  [0, 0, 0, 1, 5, 1, 0, 0],
+  [1, 9, 1, 1, 5, 1, 0, 0],
+  [1, 5, 2, 5, 5, 1, 1, 0],
+  [1, 5, 1, 2, 5, 5, 1, 0],
+  [1, 5, 5, 5, 1, 5, 1, 0],
+  [1, 1, 1, 5, 5, 5, 1, 0],
+  [0, 0, 1, 1, 1, 1, 1, 0],
+];
+
+const level3 = [[], [], [], [], [], [], [], [], [], [], [], []];
 
 const man = {
   y: 7,
-  x: 4,
+  x: 2,
   value: 5,
 };
 
 const tileClasses = {
-  0: "emptiness",
+  7: "emptiness",
+  0: "emptiness2",
   1: "wall",
   2: "box",
   3: "checkPoint",
   5: "floor",
+  8: "door2",
+  9: "door",
+  11: "closeDoor",
+  12: "door",
   23: "boxAtCheckpoint",
 };
 
 const gameContainer = document.getElementById("game");
 
-for (let y = 0; y < map.length; y++) {
-  for (let x = 0; x < map[y].length; x++) {
-    const cell = document.createElement("div");
-    cell.className = `cell ${tileClasses[map[y][x]]}`;
-    cell.id = `cell-${y}-${x}`;
-    gameContainer.appendChild(cell);
+function drawMap() {
+  gameContainer.style.gridTemplateColumns = `repeat(${map[0].length}, 40px)`;
+  for (let y = 0; y < map.length; y++) {
+    for (let x = 0; x < map[y].length; x++) {
+      const cell = document.createElement("div");
+      cell.className = `cell ${tileClasses[map[y][x]]}`;
+      cell.id = `cell-${y}-${x}`;
+      gameContainer.appendChild(cell);
+    }
   }
 }
+
+drawMap();
 
 function updateCell(y, x, type) {
   document.querySelector(`#cell-${y}-${x}`).className = `cell ${type}`;
@@ -129,7 +171,10 @@ document.addEventListener("keydown", (event) => {
     const fromType = nextCell === 5 ? "floor" : "checkPoint";
     const newValue = nextCell === 5 ? 5 : 34;
     updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, newValue);
+  } else if (nextCell === 12) {
+    loadLevel(level2, 8, 1);
   }
+  console.log(nextCell);
   console.log(`x = ${man.x}, y = ${man.y}`);
   console.log(`cell = ${map[man.y][man.x]}`);
   console.log(` value = ${man.value}`);
@@ -149,16 +194,64 @@ const StepCounter = () => {
 const Steps = StepCounter();
 
 let seconds = 0;
-setInterval(() => {
-  seconds++;
-  timeElement.textContent = `Time: ${seconds} sec`;
-}, 1000);
+
+function startTimer() {
+  setInterval(() => {
+    seconds++;
+    timeElement.textContent = `Time: ${seconds} sec`;
+  }, 1000);
+}
 
 function checkWin() {
   for (let row of map) {
     if (row.includes(2)) return false;
   }
   document.getElementById("winModal").classList.remove("hidden");
-
+  music.pause();
   return true;
+}
+
+const startScreen = document.getElementById("start-screen");
+const startButton = document.getElementById("start-button");
+const music = document.getElementById("bg-music");
+
+startButton.addEventListener("click", () => {
+  startScreen.style.display = "none";
+  startTimer();
+  music.play();
+});
+
+document.getElementById("ok-btn").addEventListener("click", () => {
+  document.getElementById("winModal").classList.add("hidden");
+  let opened = false;
+  let closed = false;
+
+  for (let y = 0; y < map.length; y++) {
+    for (let x = 0; x < map[y].length; x++) {
+      if (map[y][x] === 11 && !opened) {
+        map[y][x] = 12;
+        updateCell(y, x, tileClasses[9]);
+        opened = true;
+      } else if (map[y][x] === 9 && !closed) {
+        map[y][x] = 11;
+        updateCell(y, x, tileClasses[11]);
+        closed = true;
+      }
+      if (opened && closed) break;
+    }
+    if (opened && closed) break;
+  }
+});
+
+function loadLevel(newMap, startY, startX) {
+  map.length = 0;
+  for (let row of newMap) {
+    map.push([...row]);
+  }
+  gameContainer.innerHTML = "";
+  drawMap();
+  man.y = startY;
+  man.x = startX;
+  man.value = 5;
+  updateCell(man.y, man.x, "man");
 }
