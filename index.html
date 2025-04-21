@@ -11,7 +11,7 @@
       <h1>Сокобан: Тёмное подземелье</h1>
       <button id="start-button" class="btn">Начать игру</button>
     </div>
-    <audio id="bg-music" src="Woooo.mp3" loop></audio>
+    <!-- <audio id="bg-music" src="Woooo.mp3" loop></audio> -->
     <div id="hud">
       <div id="time">Time: 0 sec</div>
       <div id="steps">Steps: 0</div>
@@ -19,12 +19,22 @@
     <div id="game-container">
       <div id="game"></div>
     </div>
+    <div id="statsModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="statsText"></p>
+        <button id="stats-ok-btn" class="btn">Круто!</button>
+      </div>
+    </div>
     <div id="winModal" class="modal hidden">
       <div class="modal-content">
-        <p>Уровень пройден! <br>
-          Проследуйте к открывшейся двери
-        </p>
-        <button id = "ok-btn" class="btn" >Ok</button>
+        <p>Проследуйте к открывшейся двери</p>
+        <button id="ok-btn" class="btn">Ok</button>
+      </div>
+    </div>
+    <div id="finalWinModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="gameStop"></p>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>

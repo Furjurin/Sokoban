@@ -12,7 +12,7 @@
 // ];
 
 const map = [
-  [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 7, 0, 0, 0, 0],
   [0, 0, 0, 1, 1, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 7],
   [0, 0, 0, 1, 5, 5, 5, 1, 7, 0, 0, 0, 0, 0, 0, 0],
   [0, 7, 0, 1, 5, 5, 5, 1, 1, 1, 1, 0, 7, 0, 0, 0],
@@ -34,14 +34,25 @@ const level2 = [
   [0, 0, 0, 1, 2, 1, 0, 0],
   [0, 0, 0, 1, 5, 1, 0, 0],
   [1, 9, 1, 1, 5, 1, 0, 0],
-  [1, 5, 2, 5, 5, 1, 1, 0],
-  [1, 5, 1, 2, 5, 5, 1, 0],
+  [1, 5, 5, 5, 5, 1, 1, 0],
+  [1, 5, 1, 5, 5, 5, 1, 0],
   [1, 5, 5, 5, 1, 5, 1, 0],
   [1, 1, 1, 5, 5, 5, 1, 0],
   [0, 0, 1, 1, 1, 1, 1, 0],
 ];
 
-const level3 = [[], [], [], [], [], [], [], [], [], [], [], []];
+const level3 = [
+  [0, 0, 7, 1, 1, 1, 1, 7, 0, 0],
+  [0, 0, 1, 1, 5, 5, 1, 1, 0, 0],
+  [7, 0, 1, 5, 5, 2, 3, 1, 1, 1],
+  [0, 1, 1, 5, 5, 5, 5, 5, 5, 1],
+  [0, 1, 5, 5, 1, 5, 5, 5, 5, 1],
+  [0, 1, 5, 5, 3, 5, 3, 3, 1, 1],
+  [1, 9, 1, 5, 1, 5, 1, 5, 1, 0],
+  [1, 5, 5, 5, 3, 5, 5, 5, 1, 7],
+  [1, 5, 5, 5, 5, 1, 5, 5, 1, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+];
 
 const man = {
   y: 7,
@@ -143,71 +154,125 @@ document.addEventListener("keydown", (event) => {
     const fromType = oldValue === 5 ? "floor" : "checkPoint";
     updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, 5);
   } else if (nextCell === 2 || nextCell === 23) {
-    if (afterBox === 5 && (man.value === 5 || man.value === 15)) {
-      const fromTypeC = man.value === 5 ? 5 : 3;
-      const fromType = man.value === 5 ? "floor" : "checkPoint";
+    if (afterBox === 5 && (oldValue === 5 || oldValue === 15)) {
+      const fromType = oldValue === 5 ? "floor" : "checkPoint";
       updateManPosition(man.y, man.x, newManY, newManX, fromType, 5);
-      pushBox(fromTypeC, boxNewY, boxNewX, 2);
+      pushBox(5, boxNewY, boxNewX, 2);
     } else if (
       afterBox === 3 &&
-      man.value === 5 &&
+      oldValue === 5 &&
       map[newManY][newManX] === 2
     ) {
       updateManPosition(man.y, man.x, newManY, newManX, "floor", 15);
       pushBox(5, boxNewY, boxNewX, 23);
     } else if (
       afterBox === 3 &&
-      ((man.value === 5 && map[newManY][newManX] === 23) || man.value === 15)
+      (oldValue === 5 || oldValue === 15) &&
+      map[newManY][newManX] === 23
     ) {
       updateManPosition(man.y, man.x, newManY, newManX, "floor", 34);
       pushBox(3, boxNewY, boxNewX, 23);
-    } else if ((afterBox === 3 || afterBox === 5) && man.value === 34) {
+    } else if (
+      (afterBox === 3 || afterBox === 5) &&
+      oldValue === 34 &&
+      nextCell === 23
+    ) {
       const newValue = afterBox === 3 ? 34 : 15;
       const boxType = afterBox === 3 ? 23 : 2;
       updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", newValue);
       pushBox(3, boxNewY, boxNewX, boxType);
+    } else if (afterBox === 5 && oldValue === 34 && nextCell === 2) {
+      const newValue = afterBox === 3 ? 34 : 5;
+      const boxType = afterBox === 3 ? 23 : 2;
+      updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", newValue);
+      pushBox(5, boxNewY, boxNewX, boxType);
+    } else if (oldValue === 34 && afterBox === 3 && nextCell === 2) {
+      updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", 5);
+      pushBox(5, boxNewY, boxNewX, 23);
     }
   } else if ((nextCell === 5 || nextCell === 3) && oldValue === 15) {
     const fromType = nextCell === 5 ? "floor" : "checkPoint";
     const newValue = nextCell === 5 ? 5 : 34;
     updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, newValue);
   } else if (nextCell === 12) {
-    loadLevel(level2, 8, 1);
+    const tp = teleports[currentLevel];
+    if (tp && tp.fromTile === nextCell) {
+      loadLevel(levels[tp.toLevel], tp.toY, tp.toX);
+      currentLevel = tp.toLevel;
+    }
   }
   console.log(nextCell);
   console.log(`x = ${man.x}, y = ${man.y}`);
   console.log(`cell = ${map[man.y][man.x]}`);
   console.log(` value = ${man.value}`);
+
+  for (const number of map) {
+    console.log(number);
+  }
 });
 
 const stepsElement = document.getElementById("steps");
 const timeElement = document.getElementById("time");
 
-const StepCounter = () => {
-  let steps = 0;
-  return () => {
-    steps++;
-    stepsElement.textContent = `Steps: ${steps}`;
-  };
-};
+let steps = 0;
 
-const Steps = StepCounter();
+function Steps() {
+  if (gamePaused) return;
+  steps++;
+  stepsElement.textContent = `Steps: ${steps}`;
+}
 
 let seconds = 0;
 
+let timer;
 function startTimer() {
-  setInterval(() => {
-    seconds++;
-    timeElement.textContent = `Time: ${seconds} sec`;
+  timer = setInterval(() => {
+    if (!gamePaused) {
+      seconds++;
+      timeElement.textContent = `Time: ${seconds} sec`;
+    }
   }, 1000);
 }
+
+function resetTimeSteps() {
+  clearInterval(timer);
+  steps = 0;
+  seconds = 0;
+  timeElement.textContent = "Time: 0 sec";
+  stepsElement.textContent = "Steps: 0";
+  startTimer();
+}
+
+let gamePaused = false;
+
+function showStats() {
+  gamePaused = true;
+  const text = document.getElementById("statsText");
+  text.innerHTML = `Вы прошли уровень за ${seconds} секунд и ${steps} шагов!`;
+  document.getElementById("statsModal").classList.remove("hidden");
+  music.pause();
+}
+
+document.getElementById("stats-ok-btn").addEventListener("click", () => {
+  document.getElementById("statsModal").classList.add("hidden");
+  document.getElementById("winModal").classList.remove("hidden");
+});
+
+let levelCheck = 2;
 
 function checkWin() {
   for (let row of map) {
     if (row.includes(2)) return false;
   }
-  document.getElementById("winModal").classList.remove("hidden");
-  music.pause();
+  if (currentLevel === levels.length - 1) {
+    gamePaused = true;
+    const text2 = document.getElementById("gameStop");
+    text2.innerHTML = `Игра пройдена!<br>Вы прошли уровень за ${seconds} секунд и ${steps} шагов!`;
+    document.getElementById("finalWinModal").classList.remove("hidden");
+    music.pause();
+  } else {
+    showStats();
+  }
   return true;
 }
 
@@ -217,7 +282,7 @@ const music = document.getElementById("bg-music");
 
 startButton.addEventListener("click", () => {
   startScreen.style.display = "none";
-  startTimer();
+  resetTimeSteps();
   music.play();
 });
 
@@ -254,4 +319,17 @@ function loadLevel(newMap, startY, startX) {
   man.x = startX;
   man.value = 5;
   updateCell(man.y, man.x, "man");
+  resetTimeSteps();
+  gamePaused = false;
 }
+
+const levels = [map, level2, level3];
+let currentLevel = 0;
+const teleports = {
+  0: { fromTile: 12, toLevel: 1, toY: 8, toX: 1 },
+  1: { fromTile: 12, toLevel: 2, toY: 7, toX: 1 },
+};
+
+document.getElementById("restart-btn").addEventListener("click", () => {
+  document.getElementById("finalWinModal").classList.add("hidden");
+});
