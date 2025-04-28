@@ -21,8 +21,8 @@ const level2 = [
   [0, 0, 0, 1, 2, 1, 0, 0],
   [0, 0, 0, 1, 5, 1, 0, 0],
   [1, 9, 1, 1, 5, 1, 0, 0],
-  [1, 5, 5, 5, 5, 1, 1, 0],
-  [1, 5, 1, 5, 5, 5, 1, 0],
+  [1, 5, 2, 5, 5, 1, 1, 0],
+  [1, 5, 1, 2, 5, 5, 1, 0],
   [1, 5, 5, 5, 1, 5, 1, 0],
   [1, 1, 1, 5, 5, 5, 1, 0],
   [0, 0, 1, 1, 1, 1, 1, 0],
@@ -32,11 +32,11 @@ const level3 = [
   [0, 0, 7, 1, 1, 1, 1, 7, 0, 0],
   [0, 0, 1, 1, 5, 5, 1, 1, 0, 0],
   [7, 0, 1, 5, 5, 2, 3, 1, 1, 1],
-  [0, 1, 1, 5, 5, 5, 5, 5, 5, 1],
-  [0, 1, 5, 5, 1, 5, 5, 5, 5, 1],
+  [0, 1, 1, 5, 5, 5, 5, 2, 5, 1],
+  [0, 1, 5, 5, 1, 5, 2, 5, 5, 1],
   [0, 1, 5, 5, 3, 5, 3, 3, 1, 1],
   [1, 9, 1, 5, 1, 5, 1, 5, 1, 0],
-  [1, 5, 5, 5, 3, 5, 5, 5, 1, 7],
+  [1, 5, 2, 2, 3, 5, 5, 5, 1, 7],
   [1, 5, 5, 5, 5, 1, 5, 5, 1, 0],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
 ];
@@ -131,62 +131,43 @@ document.addEventListener("keydown", (event) => {
   } else if (nextCell === 3 && (oldValue === 5 || oldValue === 34)) {
     const fromType = oldValue === 5 ? "floor" : "checkPoint";
     updateManPosition(man.y, man.x, newManY, newManX, fromType, 34);
-  } else if (nextCell === 5 && (oldValue === 34 || oldValue === 5)) {
+  } else if (nextCell === 5 && (oldValue === 5 || oldValue === 34)) {
     const fromType = oldValue === 5 ? "floor" : "checkPoint";
     updateManPosition(man.y, man.x, newManY, newManX, fromType, 5);
-  } else if ((nextCell === 5 || nextCell === 3) && oldValue === 15) {
-    const fromType = nextCell === 5 ? "floor" : "checkPoint";
-    const newValue = nextCell === 5 ? 5 : 34;
-    updateManPosition(man.y, man.x, newManY, newManX, fromType, newValue);
   } else if (nextCell === 12) {
     const tp = teleports[currentLevel];
-    if (tp && tp.fromTile === nextCell) {
-      loadLevel(levels[tp.toLevel], tp.toY, tp.toX);
-      currentLevel = tp.toLevel;
-    }
+    loadLevel(levels[tp.toLevel], tp.toY, tp.toX);
+    currentLevel = tp.toLevel;
   } else if (nextCell === 2 || nextCell === 23) {
-    if (afterBox === 5 && (oldValue === 5 || oldValue === 15)) {
+    if (afterBox === 5 && (oldValue === 5 || oldValue === 34)) {
       const fromType = oldValue === 5 ? "floor" : "checkPoint";
       updateManPosition(man.y, man.x, newManY, newManX, fromType, 5);
       pushBox(5, boxNewY, boxNewX, 2);
     } else if (
       afterBox === 3 &&
       oldValue === 5 &&
-      map[newManY][newManX] === 2
+      (nextCell === 2 || nextCell === 23)
     ) {
-      updateManPosition(man.y, man.x, newManY, newManX, "floor", 15);
-      pushBox(5, boxNewY, boxNewX, 23);
+      const fromTypeC = nextCell === 2 ? 5 : 3;
+      const newValue = nextCell === 2 ? 5 : 34;
+      updateManPosition(man.y, man.x, newManY, newManX, "floor", newValue);
+      pushBox(fromTypeC, boxNewY, boxNewX, 23);
     } else if (
       afterBox === 3 &&
-      (oldValue === 5 || oldValue === 15) &&
-      map[newManY][newManX] === 23
-    ) {
-      updateManPosition(man.y, man.x, newManY, newManX, "floor", 34);
-      pushBox(3, boxNewY, boxNewX, 23);
-    } else if (
-      (afterBox === 3 || afterBox === 5) &&
       oldValue === 34 &&
-      nextCell === 23
+      (nextCell === 2 || nextCell === 23)
     ) {
-      const newValue = afterBox === 3 ? 34 : 15;
-      const boxType = afterBox === 3 ? 23 : 2;
+      const fromTypeC = nextCell === 23 ? 3 : 5;
+      const newValue = nextCell === 23 ? 34 : 5;
       updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", newValue);
-      pushBox(3, boxNewY, boxNewX, boxType);
-    } else if (afterBox === 5 && oldValue === 34 && nextCell === 2) {
-      const newValue = afterBox === 3 ? 34 : 5;
-      const boxType = afterBox === 3 ? 23 : 2;
-      updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", newValue);
-      pushBox(5, boxNewY, boxNewX, boxType);
-    } else if (oldValue === 34 && afterBox === 3 && nextCell === 2) {
-      updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", 5);
-      pushBox(5, boxNewY, boxNewX, 23);
+      pushBox(fromTypeC, boxNewY, boxNewX, 23);
     }
   }
 });
-
 const stepsElement = document.getElementById("steps");
 const timeElement = document.getElementById("time");
 
+let gamePaused = false;
 let steps = 0;
 
 function Steps() {
@@ -196,8 +177,8 @@ function Steps() {
 }
 
 let seconds = 0;
-
 let timer;
+
 function startTimer() {
   timer = setInterval(() => {
     if (!gamePaused) {
@@ -215,8 +196,6 @@ function resetTimeSteps() {
   stepsElement.textContent = "Steps: 0";
   startTimer();
 }
-
-let gamePaused = false;
 
 function showStats() {
   gamePaused = true;
@@ -299,10 +278,6 @@ function loadLevel(newMap, startY, startX) {
 const levels = [map, level2, level3];
 let currentLevel = 0;
 const teleports = {
-  0: { fromTile: 12, toLevel: 1, toY: 8, toX: 1 },
-  1: { fromTile: 12, toLevel: 2, toY: 7, toX: 1 },
+  0: { toLevel: 1, toY: 8, toX: 1 },
+  1: { toLevel: 2, toY: 7, toX: 1 },
 };
-
-document.getElementById("restart-btn").addEventListener("click", () => {
-  document.getElementById("finalWinModal").classList.add("hidden");
-});
