@@ -1,24 +1,11 @@
-// const map = [
-//   [0, 0, 0, 1, 1, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 7],
-//   [0, 0, 0, 1, 5, 5, 5, 1, 7, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 7, 0, 1, 5, 2, 2, 1, 1, 1, 1, 0, 7, 0, 0, 0],
-//   [0, 0, 0, 1, 5, 5, 2, 5, 2, 5, 1, 0, 0, 7, 0, 0],
-//   [7, 0, 0, 1, 5, 5, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0],
-//   [1, 1, 9, 1, 5, 5, 1, 8, 2, 5, 1, 1, 1, 1, 1, 1],
-//   [1, 5, 5, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 3, 3, 1],
-//   [1, 1, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 3, 3, 1],
-//   [7, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 3, 3, 1],
-//   [0, 7, 0, 0, 0, 0, 0, 0, 7, 0, 1, 1, 8, 1, 1, 1],
-// ];
-
 const map = [
   [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 7, 0, 0, 0, 0],
   [0, 0, 0, 1, 1, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 7],
   [0, 0, 0, 1, 5, 5, 5, 1, 7, 0, 0, 0, 0, 0, 0, 0],
-  [0, 7, 0, 1, 5, 5, 5, 1, 1, 1, 1, 0, 7, 0, 0, 0],
-  [0, 0, 0, 1, 5, 5, 5, 5, 5, 5, 1, 0, 0, 7, 0, 0],
+  [0, 7, 0, 1, 5, 2, 2, 1, 1, 1, 1, 0, 7, 0, 0, 0],
+  [0, 0, 0, 1, 5, 5, 2, 5, 2, 5, 1, 0, 0, 7, 0, 0],
   [7, 0, 0, 1, 5, 5, 1, 5, 5, 5, 1, 0, 0, 0, 0, 0],
-  [1, 1, 9, 1, 5, 5, 1, 8, 5, 5, 1, 1, 1, 1, 1, 1],
+  [1, 1, 9, 1, 5, 5, 1, 8, 2, 5, 1, 1, 1, 1, 1, 1],
   [1, 5, 5, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 3, 3, 1],
   [1, 1, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 3, 3, 1],
   [7, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 3, 3, 1],
@@ -105,15 +92,9 @@ function updateManPosition(oldY, oldX, newY, newX, fromType, newValue) {
   man.value = newValue;
 }
 
-function updateManPositionOutBox(oldY, oldX, newY, newX, fromType, newValue) {
-  updateManPosition(oldY, oldX, newY, newX, fromType, newValue);
-  updateCell(newY, newX, "man");
-}
-
 function pushBox(fromTypeC, toY, toX, boxType) {
   map[man.y][man.x] = fromTypeC;
   map[toY][toX] = boxType;
-  updateCell(man.y, man.x, "man");
   updateCell(toY, toX, tileClasses[boxType]);
   checkWin();
 }
@@ -149,10 +130,20 @@ document.addEventListener("keydown", (event) => {
     return;
   } else if (nextCell === 3 && (oldValue === 5 || oldValue === 34)) {
     const fromType = oldValue === 5 ? "floor" : "checkPoint";
-    updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, 34);
+    updateManPosition(man.y, man.x, newManY, newManX, fromType, 34);
   } else if (nextCell === 5 && (oldValue === 34 || oldValue === 5)) {
     const fromType = oldValue === 5 ? "floor" : "checkPoint";
-    updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, 5);
+    updateManPosition(man.y, man.x, newManY, newManX, fromType, 5);
+  } else if ((nextCell === 5 || nextCell === 3) && oldValue === 15) {
+    const fromType = nextCell === 5 ? "floor" : "checkPoint";
+    const newValue = nextCell === 5 ? 5 : 34;
+    updateManPosition(man.y, man.x, newManY, newManX, fromType, newValue);
+  } else if (nextCell === 12) {
+    const tp = teleports[currentLevel];
+    if (tp && tp.fromTile === nextCell) {
+      loadLevel(levels[tp.toLevel], tp.toY, tp.toX);
+      currentLevel = tp.toLevel;
+    }
   } else if (nextCell === 2 || nextCell === 23) {
     if (afterBox === 5 && (oldValue === 5 || oldValue === 15)) {
       const fromType = oldValue === 5 ? "floor" : "checkPoint";
@@ -190,24 +181,6 @@ document.addEventListener("keydown", (event) => {
       updateManPosition(man.y, man.x, newManY, newManX, "checkPoint", 5);
       pushBox(5, boxNewY, boxNewX, 23);
     }
-  } else if ((nextCell === 5 || nextCell === 3) && oldValue === 15) {
-    const fromType = nextCell === 5 ? "floor" : "checkPoint";
-    const newValue = nextCell === 5 ? 5 : 34;
-    updateManPositionOutBox(man.y, man.x, newManY, newManX, fromType, newValue);
-  } else if (nextCell === 12) {
-    const tp = teleports[currentLevel];
-    if (tp && tp.fromTile === nextCell) {
-      loadLevel(levels[tp.toLevel], tp.toY, tp.toX);
-      currentLevel = tp.toLevel;
-    }
-  }
-  console.log(nextCell);
-  console.log(`x = ${man.x}, y = ${man.y}`);
-  console.log(`cell = ${map[man.y][man.x]}`);
-  console.log(` value = ${man.value}`);
-
-  for (const number of map) {
-    console.log(number);
   }
 });
 
